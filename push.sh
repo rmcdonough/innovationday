@@ -5,8 +5,7 @@ ECRURL=".dkr.ecr.us-west-2.amazonaws.com/"
 
 APPS="python-app-1
 python-app-2
-python-app-3
-python-app-4"
+python-app-3"
 
 # Login to ECR
 # aws ecr get-login --no-include-email --region us-west-2 | bash

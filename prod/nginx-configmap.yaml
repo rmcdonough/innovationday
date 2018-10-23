@@ -19,10 +19,6 @@ data:
         upstream python-app-3 {
             server python-app-3;
         } 
-
-        upstream python-pod-1 {
-            server python-pod-1;
-        } 
                 
         server {
             listen       80;
@@ -55,8 +51,4 @@ data:
                 proxy_pass http://python-app-3;
             }
 
-            location /python-pod-1/hello {
-                rewrite ^/python-pod-1/ $1 break;
-                proxy_pass http://python-pod-1;
-            }
         }

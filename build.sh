@@ -2,8 +2,7 @@
 
 DIRS="python-app-1
 python-app-2
-python-app-3
-python-app-4"
+python-app-3"
 
 for DIR in $DIRS ; do
 	echo BUILDING $DIR
