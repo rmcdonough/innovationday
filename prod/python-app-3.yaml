@@ -1,0 +1,36 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: python-app-3
+  namespace: prod
+spec:
+  ports:  
+    - port: 80
+      targetPort: 5000
+  selector:
+    role: python-app-3
+
+---
+kind: ReplicationController
+apiVersion: v1
+metadata:
+  name: python-app-3
+  namespace: prod
+spec:
+  replicas: 3
+  template: 
+    metadata: 
+      labels:
+        role: python-app-3
+    spec:
+      containers:
+        - name: python-app-3
+          imagePullPolicy: Always
+          image: REPLACEME.dkr.ecr.us-west-2.amazonaws.com/python-app-3:latest
+          livenessProbe:   
+            httpGet:
+              path: /health_check
+              port: 5000
+            initialDelaySeconds: 3
+            periodSeconds: 3

@@ -1,0 +1,27 @@
+# Sample - do not use!
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: unicorn-gateway
+  namespace: prod
+  # annotations:
+  #   nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  # externalTrafficPolicy: Cluster
+  backend: 
+    serviceName: python-app-1
+    servicePort: 80
+  rules:
+    - host: example.com
+      http:
+        paths:  
+          - path: /unicorn1
+            backend:
+              serviceName: python-app-2
+              servicePort: 80
+          - path: /unicorn2
+            backend:
+              serviceName: python-app-2
+              servicePort: 80   

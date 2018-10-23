@@ -1,0 +1,47 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: redis
+  namespace: prod
+spec:
+  ports:  
+    - port: 6379
+      targetPort: 6379
+  selector:
+    role: redis
+
+---
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: redis
+  namespace: prod
+spec:
+  serviceName: redis
+  replicas: 1
+  selector:
+    matchLabels:
+      role: redis  
+  template:
+    metadata:
+        labels:
+          role: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis  # default Redis container from Docker Hub
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: data
+              mountPath: /data         
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi

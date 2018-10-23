@@ -1,0 +1,62 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: prod
+  name: nginx
+data:
+  default.conf: |
+        # /etc/nginx/conf.d/default.conf
+
+        upstream python-app-1 {
+            server python-app-1;
+        }
+
+        upstream python-app-2 {
+            server python-app-2;
+        }
+
+        upstream python-app-3 {
+            server python-app-3;
+        } 
+
+        upstream python-pod-1 {
+            server python-pod-1;
+        } 
+                
+        server {
+            listen       80;
+            server_name  localhost default_server;
+
+            #location / {
+            #    root   /usr/share/nginx/html;
+            #    index  index.html index.htm;
+            #}
+
+            # redirect server error pages to the static page /50x.html
+            #
+            error_page   500 502 503 504  /50x.html;
+            location = /50x.html {
+                root   /usr/share/nginx/html;
+            }
+
+            location / {
+                proxy_pass http://python-app-1;
+
+            }
+
+            location /unicorns {
+                rewrite ^/unicorns/(.*)$ $1 break;
+                proxy_pass http://python-app-2;
+            }
+
+            location /newman {
+                rewrite ^/newman/(.*)$ $1 break;
+                proxy_pass http://python-app-3;
+            }
+
+            location /python-pod-1/hello {
+                rewrite ^/python-pod-1/ $1 break;
+                proxy_pass http://python-pod-1;
+            }
+        }

@@ -1,0 +1,51 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: python-pod-1
+  namespace: prod
+spec:
+  ports:  
+    - port: 80
+      targetPort: 5001
+  selector:
+    role: python-pod-1
+
+---
+kind: ReplicationController
+apiVersion: v1
+metadata:
+  name: python-pod-1
+  namespace: prod
+spec:
+  replicas: 1
+  template: 
+    metadata: 
+      labels:
+        role: python-pod-1
+    spec:
+      containers:
+        - name: python-app-1
+          imagePullPolicy: Always
+          image: REPLACEME.dkr.ecr.us-west-2.amazonaws.com/python-app-1:latest
+          livenessProbe:   
+            httpGet:
+              path: /health_check
+              port: 5000
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          env:
+            - name: REDIS_HOST
+              value: redis            
+        - name: python-app-4
+          imagePullPolicy: Always
+          image: REPLACEME.dkr.ecr.us-west-2.amazonaws.com/python-app-4:latest
+          livenessProbe:   
+            httpGet:
+              path: /health_check
+              port: 5001
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          env:
+            - name: TIME_SERVICE
+              value: "http://localhost:5000"
