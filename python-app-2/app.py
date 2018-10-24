@@ -8,10 +8,8 @@ otherwise doing dumb things
 import logging
 import json_logging
 import os
-import redis
+import random
 import socket
-import time
-import traceback
 import sys
 from flask import Flask, jsonify, send_file
 from logging.config import dictConfig
@@ -26,9 +24,9 @@ logger.setLevel(logging.DEBUG)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
 
-REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
 UNICORN1 = 'unicorn1.jpg'
 UNICORN2 = 'unicorn2.gif'
+UNICORNS = [UNICORN1, UNICORN2]
 
 
 @app.route('/unicorn1')
@@ -39,6 +37,16 @@ def unicorn1():
 @app.route('/unicorn2')
 def unicorn2():
 	return send_file(UNICORN2, mimetype='image/gif')
+
+
+@app.route('/random')
+def random_unicorn():
+	return send_file(random.choice(UNICORNS))
+
+
+@app.route('/list')
+def list_unicorns():
+	return jsonify({'unicorns': UNICORNS})
 
 
 @app.route('/health_check')
